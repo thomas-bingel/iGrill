@@ -1,0 +1,2 @@
+C:\dotnet\iGrill\IGrill.Playground\IGrill.Playground\IGrill.Playground.csproj;arm
+C:\dotnet\iGrill\IGrill.Playground\IGrillLibrary\IGrillLibrary.csproj;arm
