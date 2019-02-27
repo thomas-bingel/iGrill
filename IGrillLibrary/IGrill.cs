@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Devices.Enumeration;
@@ -19,38 +20,71 @@ namespace IGrillLibrary
 
         private Random rnd = new Random();
 
-        private Guid TEMPERATURE_SERVICE_GUID = Guid.Parse("a5c50000-f186-4bd6-97f2-7ebacba0d708");
-        private Guid PROBE_1_TEMPERATURE_CHARACTERISITC_GUID = Guid.Parse("06ef0002-2e06-4b79-9e33-fce2c42805ec");
-        private Guid PROBE_2_TEMPERATURE_CHARACTERISITC_GUID = Guid.Parse("06ef0004-2e06-4b79-9e33-fce2c42805ec");
-        private Guid PROBE_3_TEMPERATURE_CHARACTERISITC_GUID = Guid.Parse("06ef0006-2e06-4b79-9e33-fce2c42805ec");
-        private Guid PROBE_4_TEMPERATURE_CHARACTERISITC_GUID = Guid.Parse("06ef0008-2e06-4b79-9e33-fce2c42805ec");
+        private readonly Guid TEMPERATURE_SERVICE_GUID = Guid.Parse("a5c50000-f186-4bd6-97f2-7ebacba0d708");
+        private readonly Guid PROBE_1_TEMPERATURE_CHARACTERISITC_GUID = Guid.Parse("06ef0002-2e06-4b79-9e33-fce2c42805ec");
+        private readonly Guid PROBE_2_TEMPERATURE_CHARACTERISITC_GUID = Guid.Parse("06ef0004-2e06-4b79-9e33-fce2c42805ec");
+        private readonly Guid PROBE_3_TEMPERATURE_CHARACTERISITC_GUID = Guid.Parse("06ef0006-2e06-4b79-9e33-fce2c42805ec");
+        private readonly Guid PROBE_4_TEMPERATURE_CHARACTERISITC_GUID = Guid.Parse("06ef0008-2e06-4b79-9e33-fce2c42805ec");
 
-        private Guid DEVICE_SERVICE_GUID = Guid.Parse("64AC0000-4A4B-4B58-9F37-94D3C52FFDF7");
-        private Guid FIRMWARE_CHARACTERISTIC_GUID = Guid.Parse("64AC0001-4A4B-4B58-9F37-94D3C52FFDF7");
-        private Guid APP_CHALLENGE_GUID = Guid.Parse("64AC0002-4A4B-4B58-9F37-94D3C52FFDF7");
-        private Guid DEVICE_CHALLENGE_GUID = Guid.Parse("64AC0003-4A4B-4B58-9F37-94D3C52FFDF7");
-        private Guid DEVICE_RESPONSE_GUID = Guid.Parse("64AC0004-4A4B-4B58-9F37-94D3C52FFDF7");
+        private readonly Guid DEVICE_SERVICE_GUID = Guid.Parse("64AC0000-4A4B-4B58-9F37-94D3C52FFDF7");
+        private readonly Guid FIRMWARE_CHARACTERISTIC_GUID = Guid.Parse("64AC0001-4A4B-4B58-9F37-94D3C52FFDF7");
+        private readonly Guid APP_CHALLENGE_GUID = Guid.Parse("64AC0002-4A4B-4B58-9F37-94D3C52FFDF7");
+        private readonly Guid DEVICE_CHALLENGE_GUID = Guid.Parse("64AC0003-4A4B-4B58-9F37-94D3C52FFDF7");
+        private readonly Guid DEVICE_RESPONSE_GUID = Guid.Parse("64AC0004-4A4B-4B58-9F37-94D3C52FFDF7");
 
-        private Guid BATTERY_SERVICE_GUID = Guid.Parse("0000180f-0000-1000-8000-00805F9B34FB");
+        private readonly Guid BATTERY_SERVICE_GUID = Guid.Parse("0000180f-0000-1000-8000-00805F9B34FB");
 
-        private byte[] iGrill2Key = new byte[] {
+        private readonly byte[] iGrill2Key = new byte[] {
             0xdf, 0x33, 0xe0, 0x89, 0xf4, 0x48, 0x4e, 0x73,
             0x92, 0xd4, 0xcf, 0xb9, 0x46, 0xe7, 0x85, 0xb6 };
 
-        Dictionary<Guid, EventHandler<int>> probes = new Dictionary<Guid, EventHandler<int>>();
+        List<Guid> probes = new List<Guid>();
 
         private BluetoothLEDevice bluetoothLeDevice;
+        private readonly IGrillVersion iGrillVersion;
+        private readonly Timer simulationTimer;
 
-        public event EventHandler<int> OnProbe1TemperatureChange;
-        public event EventHandler<int> OnProbe2TemperatureChange;
-        public event EventHandler<int> OnProbe3TemperatureChange;
-        public event EventHandler<int> OnProbe4TemperatureChange;
-
-        public async Task InitAsync(String deviceId)
+        public IGrill(IGrillVersion iGrillVersion)
         {
+            this.iGrillVersion = iGrillVersion;
+            switch(iGrillVersion)
+            {
+                case IGrillVersion.IGrill2:
+                    probes.Add(PROBE_1_TEMPERATURE_CHARACTERISITC_GUID);
+                    probes.Add(PROBE_2_TEMPERATURE_CHARACTERISITC_GUID);
+                    probes.Add(PROBE_3_TEMPERATURE_CHARACTERISITC_GUID);
+                    probes.Add(PROBE_4_TEMPERATURE_CHARACTERISITC_GUID);
+                    break;
+                case IGrillVersion.Simulation:
+                    probes.Add(PROBE_1_TEMPERATURE_CHARACTERISITC_GUID);
+                    simulationTimer = new System.Timers.Timer(1000);
+                    simulationTimer.Elapsed += (sender, arg) =>
+                    {
+                        OnTemperatureChanged?.Invoke(this, new TemperatureChangedEventArg(0, rnd.Next()));
+                    };
+                    simulationTimer.AutoReset = true;
+                    
+
+                    break;
+                default:
+                    throw new NotSupportedException("Not yet supported");
+            }
+            
+        }
+
+        public int ProbeCount { get { return probes.Count; } }
+
+        public event EventHandler<TemperatureChangedEventArg> OnTemperatureChanged;
+
+        public async Task ConnectAsync(String deviceId)
+        {
+            if (this.iGrillVersion == IGrillVersion.Simulation)
+            {
+                simulationTimer.Enabled = true;
+                return;
+            }
             bluetoothLeDevice = await BluetoothLEDevice.FromIdAsync(deviceId);
-
-
+            
             if (bluetoothLeDevice == null)
             {
                 throw new Exception("iGrill not found");
@@ -69,32 +103,23 @@ namespace IGrillLibrary
 
         private async Task RegisterForTemperatureChanges()
         {
-            probes.Add(PROBE_1_TEMPERATURE_CHARACTERISITC_GUID, OnProbe1TemperatureChange);
-            probes.Add(PROBE_2_TEMPERATURE_CHARACTERISITC_GUID, OnProbe2TemperatureChange);
-            probes.Add(PROBE_3_TEMPERATURE_CHARACTERISITC_GUID, OnProbe3TemperatureChange);
-            probes.Add(PROBE_4_TEMPERATURE_CHARACTERISITC_GUID, OnProbe4TemperatureChange);
-
-
             var service = await bluetoothLeDevice.GetGattServiceForUuidAsync(TEMPERATURE_SERVICE_GUID);
             var accessStatus = await service.RequestAccessAsync();
             var openStatus = await service.OpenAsync(GattSharingMode.Exclusive);
 
             foreach (var characteristics in await service.GetCharacteristics2Async())
             {
-                if (probes.ContainsKey(characteristics.Uuid))
+                Debug.WriteLine("Registering probe " + characteristics.Uuid);
+                await characteristics.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
+                characteristics.ValueChanged += (GattCharacteristic sender, GattValueChangedEventArgs args) =>
                 {
-                    Debug.WriteLine("Registering probe " + characteristics.Uuid);
-                    await characteristics.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
-                    characteristics.ValueChanged += (GattCharacteristic sender, GattValueChangedEventArgs args) =>
+                    var temperature = ReadTemperature(args);
+                    if (temperature != 65768)
                     {
-                        var eventHandler = probes.GetValueOrDefault(characteristics.Uuid);
-                        var temperature = ReadTemperature(args);
-                        if (temperature != 65768)
-                        {
-                            eventHandler?.Invoke(this, temperature);
-                        }
-                    };
-                }
+                        var index = probes.IndexOf(characteristics.Uuid);
+                        OnTemperatureChanged?.Invoke(this, new TemperatureChangedEventArg(index, temperature));
+                    }
+                };
             }
         }
 

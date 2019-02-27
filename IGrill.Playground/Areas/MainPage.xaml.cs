@@ -1,4 +1,6 @@
-﻿using MQTTnet;
+﻿using IGrill.Playground;
+using IGrillLibrary;
+using MQTTnet;
 using MQTTnet.Client;
 using System;
 using System.Collections.Generic;
@@ -8,10 +10,12 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Resources;
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Enumeration;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -22,7 +26,7 @@ using Windows.UI.Xaml.Navigation;
 
 // Die Elementvorlage "Leere Seite" wird unter https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x407 dokumentiert.
 
-namespace IGrill.Playground
+namespace IGrill.App.Areas
 {
     /// <summary>
     /// Eine leere Seite, die eigenständig verwendet oder zu der innerhalb eines Rahmens navigiert werden kann.
@@ -31,19 +35,17 @@ namespace IGrill.Playground
     {
 
 
-        // Using Configuration to persist selected device
-        // Using Bluetooth LE
-        // Using MQTT
-        // Using UWP
-        // Using Xaml WPF
-
+        public MainPageViewModel ViewModel
+        {
+            get { return (MainPageViewModel)this.DataContext; }
+        }
 
         IGrillLibrary.IGrill igrill;
         private DevicePicker devicePicker = null;
 
         public MainPage()
         {
-            this.InitializeComponent();
+            this.DataContext = new MainPageViewModel();
 
             devicePicker = new DevicePicker();
             this.devicePicker.DeviceSelected += async (devicePicker, args) =>
@@ -54,16 +56,41 @@ namespace IGrill.Playground
                 await PairDeviceIfNecessary(device);
                 await ConnectIGrill(device.Id);
 
-            }; 
+            };
             devicePicker.Filter.SupportedDeviceSelectors.Add(BluetoothLEDevice.GetDeviceSelectorFromPairingState(false));
             devicePicker.Filter.SupportedDeviceSelectors.Add(BluetoothLEDevice.GetDeviceSelectorFromPairingState(true));
-            devicePicker.Show(new Rect(0, 0, 200, 500), Windows.UI.Popups.Placement.Below);
+
+            if (Settings.SelectedDeviceId == null)
+            {
+                //devicePicker.Show(new Rect(0, 0, 200, 500), Windows.UI.Popups.Placement.Below);
+            }
+            ConnectIGrill("123");
+            this.InitializeComponent();
+
         }
 
         private async Task ConnectIGrill(string deviceId)
         {
-            igrill = new IGrillLibrary.IGrill();
+            igrill = new IGrillLibrary.IGrill(IGrillVersion.Simulation);
 
+            for (int i = 0; i < igrill.ProbeCount; i++)
+            {
+                ViewModel.Probes.Add(new ProbeViewModel(i));
+            }
+
+            igrill.OnTemperatureChanged += async (object sender, TemperatureChangedEventArg args) =>
+            {
+                Debug.WriteLine(String.Format("{0}: Probe {1} = {2}°C", DateTime.Now, args.ProbeId, args.Temperature));
+
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                 {
+                     ViewModel.Probes[args.ProbeId].Value = args.Temperature;
+                 });
+               
+            };
+            await igrill.ConnectAsync(deviceId);
+
+            return;
             // Create a new MQTT client.
             var factory = new MqttFactory();
             var client = factory.CreateMqttClient();
@@ -75,7 +102,6 @@ namespace IGrill.Playground
                 .Build();
             client.Disconnected += async (s, e) =>
             {
-                Console.WriteLine("### DISCONNECTED FROM SERVER ###");
                 await Task.Delay(TimeSpan.FromSeconds(5));
 
                 try
@@ -84,15 +110,16 @@ namespace IGrill.Playground
                 }
                 catch (MQTTnet.Exceptions.MqttCommunicationException ex)
                 {
-                    Console.WriteLine("### RECONNECTING FAILED ###");
+                    Console.WriteLine("Mqtt reconnect failed: " + ex.Message);
                 }
             };
 
 
-            igrill.OnProbe1TemperatureChange += async (object sender, int temperature) =>
+            igrill.OnTemperatureChanged += async (object sender, TemperatureChangedEventArg args) =>
             {
-                Debug.WriteLine(DateTime.Now + " Probe 1: " + temperature + "°C");
-                await UpdateProbeText(probe1, temperature);
+                Debug.WriteLine(String.Format("{0}: Probe {1} = {2}°C", DateTime.Now, args.ProbeId, args.Temperature));
+                ViewModel.Probes[args.ProbeId].Value = args.Temperature;
+
                 //var message = new MqttApplicationMessageBuilder()
                 //    .WithTopic("/igrill/probe1")
                 //    .WithPayload(temperature.ToString())
@@ -101,50 +128,10 @@ namespace IGrill.Playground
                 //await client.PublishAsync(message);
 
             };
-            igrill.OnProbe2TemperatureChange += async (object sender, int temperature) =>
-            {
-                Debug.WriteLine(DateTime.Now + " Probe 2: " + temperature + "°C");
-                await UpdateProbeText(probe2, temperature);
-                //var message = new MqttApplicationMessageBuilder()
-                //    .WithTopic("/igrill/probe2")
-                //    .WithPayload(temperature.ToString())
-                //    .Build();
-
-                //await client.PublishAsync(message);
-            };
-            igrill.OnProbe3TemperatureChange += async (object sender, int temperature) =>
-            {
-                Debug.WriteLine(DateTime.Now + " Probe 3: " + temperature + "°C");
-                await UpdateProbeText(probe3, temperature);
-                //await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => {
-                //    probe3.Text = temperature + "°C";
-                //});
-                //var message = new MqttApplicationMessageBuilder()
-                //    .WithTopic("/igrill/probe3")
-                //    .WithPayload(temperature.ToString())
-                //    .Build();
-
-                //await client.PublishAsync(message);
-
-            };
-            igrill.OnProbe4TemperatureChange += async (object sender, int temperature) =>
-            {
-                Debug.WriteLine(DateTime.Now + " Probe 4: " + temperature + "°C");
-                await UpdateProbeText(probe4, temperature);
-                //await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => {
-                //    probe4.Text = temperature + "°C";
-                //});
-                //var message = new MqttApplicationMessageBuilder()
-                //    .WithTopic("/igrill/probe4")
-                //    .WithPayload(temperature.ToString())
-                //    .Build();
-
-                //await client.PublishAsync(message);
-            };
 
             try
             {
-                await igrill.InitAsync(deviceId);
+                await igrill.ConnectAsync(deviceId);
 //                var result = await client.ConnectAsync(options);
             }
             catch (MQTTnet.Exceptions.MqttCommunicationException ex)
@@ -159,13 +146,7 @@ namespace IGrill.Playground
 
         }
 
-        private async Task UpdateProbeText(TextBlock textBox, int temperature)
-        {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            {
-                textBox.Text = temperature + "°C";
-            });
-        }
+      
 
         private static async Task PairDeviceIfNecessary(DeviceInformation device)
         {
