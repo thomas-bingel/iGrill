@@ -1,0 +1,1 @@
+C:\dotnet\iGrill\IGrill.BackgroundApp\IGrill.BackgroundApp.csproj;x64
