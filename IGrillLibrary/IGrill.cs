@@ -38,6 +38,9 @@ namespace IGrillLibrary
             0xdf, 0x33, 0xe0, 0x89, 0xf4, 0x48, 0x4e, 0x73,
             0x92, 0xd4, 0xcf, 0xb9, 0x46, 0xe7, 0x85, 0xb6 };
 
+        // Mini:
+        // ncryption_key = [-19, 94, 48, -114, -117, -52, -111, 19, 48, 108, -44, 104, 84, 21, 62, -35]
+
         List<Guid> probes = new List<Guid>();
 
         private BluetoothLEDevice bluetoothLeDevice;
@@ -70,6 +73,12 @@ namespace IGrillLibrary
                     throw new NotSupportedException("Not yet supported");
             }
             
+        }
+
+        public static IGrill FromDeviceId(string deviceId)
+        {
+            //TODO: 
+            return new IGrillLibrary.IGrill(IGrillVersion.IGrill2);
         }
 
         public int ProbeCount { get { return probes.Count; } }
@@ -109,6 +118,10 @@ namespace IGrillLibrary
 
             foreach (var characteristics in await service.GetCharacteristics2Async())
             {
+                if (!probes.Contains(characteristics.Uuid))
+                {
+                    continue;
+                }
                 Debug.WriteLine("Registering probe " + characteristics.Uuid);
                 await characteristics.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
                 characteristics.ValueChanged += (GattCharacteristic sender, GattValueChangedEventArgs args) =>
