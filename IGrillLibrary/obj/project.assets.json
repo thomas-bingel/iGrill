@@ -7053,11 +7053,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\dotnet\\iGrill\\IGrill.Playground\\IGrillLibrary\\IGrillLibrary.csproj",
+      "projectUniqueName": "C:\\dotnet\\iGrill\\IGrillLibrary\\IGrillLibrary.csproj",
       "projectName": "IGrillLibrary",
-      "projectPath": "C:\\dotnet\\iGrill\\IGrill.Playground\\IGrillLibrary\\IGrillLibrary.csproj",
+      "projectPath": "C:\\dotnet\\iGrill\\IGrillLibrary\\IGrillLibrary.csproj",
       "packagesPath": "C:\\Users\\tbing\\.nuget\\packages\\",
-      "outputPath": "C:\\dotnet\\iGrill\\IGrill.Playground\\IGrillLibrary\\obj\\",
+      "outputPath": "C:\\dotnet\\iGrill\\IGrillLibrary\\obj\\",
       "projectStyle": "PackageReference",
       "skipContentFileWrite": true,
       "fallbackFolders": [

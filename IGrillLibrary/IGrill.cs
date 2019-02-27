@@ -46,10 +46,10 @@ namespace IGrillLibrary
         public event EventHandler<int> OnProbe3TemperatureChange;
         public event EventHandler<int> OnProbe4TemperatureChange;
 
-        public async Task InitAsync()
+        public async Task InitAsync(String deviceId)
         {
-            bluetoothLeDevice = await BluetoothLEDevice.FromIdAsync("BluetoothLE#BluetoothLE00:1a:7d:da:71:08-70:91:8f:09:65:3a"); // RaspberryPi
-//            bluetoothLeDevice = await BluetoothLEDevice.FromIdAsync("BluetoothLE#BluetoothLEbc:83:85:21:e9:ed-70:91:8f:09:65:3a"); // Windows 10 PC
+            bluetoothLeDevice = await BluetoothLEDevice.FromIdAsync(deviceId);
+
 
             if (bluetoothLeDevice == null)
             {

@@ -7288,11 +7288,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\dotnet\\iGrill\\IGrill.Playground\\IGrill.Playground\\IGrill.Playground.csproj",
+      "projectUniqueName": "C:\\dotnet\\iGrill\\IGrill.Playground\\IGrill.Playground.csproj",
       "projectName": "IGrill.Playground",
-      "projectPath": "C:\\dotnet\\iGrill\\IGrill.Playground\\IGrill.Playground\\IGrill.Playground.csproj",
+      "projectPath": "C:\\dotnet\\iGrill\\IGrill.Playground\\IGrill.Playground.csproj",
       "packagesPath": "C:\\Users\\tbing\\.nuget\\packages\\",
-      "outputPath": "C:\\dotnet\\iGrill\\IGrill.Playground\\IGrill.Playground\\obj\\",
+      "outputPath": "C:\\dotnet\\iGrill\\IGrill.Playground\\obj\\",
       "projectStyle": "PackageReference",
       "skipContentFileWrite": true,
       "fallbackFolders": [
@@ -7312,8 +7312,8 @@
       "frameworks": {
         "uap10.0.16299": {
           "projectReferences": {
-            "C:\\dotnet\\iGrill\\IGrill.Playground\\IGrillLibrary\\IGrillLibrary.csproj": {
-              "projectPath": "C:\\dotnet\\iGrill\\IGrill.Playground\\IGrillLibrary\\IGrillLibrary.csproj"
+            "C:\\dotnet\\iGrill\\IGrillLibrary\\IGrillLibrary.csproj": {
+              "projectPath": "C:\\dotnet\\iGrill\\IGrillLibrary\\IGrillLibrary.csproj"
             }
           }
         }

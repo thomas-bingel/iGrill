@@ -9,10 +9,10 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Height="387.025" Width="656.6">
 
     <Grid>
-        <TextBox x:ConnectionId='2' x:Name="probe1" HorizontalAlignment="Left" Margin="26,75,0,0" Text="" VerticalAlignment="Top" Height="30" Width="330" />
-        <TextBox x:ConnectionId='3' x:Name="probe2" HorizontalAlignment="Left" Margin="26,132,0,0" Text="" VerticalAlignment="Top" Height="30" Width="330" />
-        <TextBox x:ConnectionId='4' x:Name="probe3" HorizontalAlignment="Left" Margin="26,186,0,0" Text="" VerticalAlignment="Top" Height="30" Width="330" />
-        <TextBox x:ConnectionId='5' x:Name="probe4" HorizontalAlignment="Left" Margin="26,243,0,0" Text="" VerticalAlignment="Top" Height="30" Width="330" />
+        <TextBlock x:ConnectionId='2' x:Name="probe1" HorizontalAlignment="Left" Margin="26,75,0,0" Text="" VerticalAlignment="Top" Height="30" Width="330" />
+        <TextBlock x:ConnectionId='3' x:Name="probe2" HorizontalAlignment="Left" Margin="26,132,0,0" Text="" VerticalAlignment="Top" Height="30" Width="330" />
+        <TextBlock x:ConnectionId='4' x:Name="probe3" HorizontalAlignment="Left" Margin="26,186,0,0" Text="" VerticalAlignment="Top" Height="30" Width="330" />
+        <TextBlock x:ConnectionId='5' x:Name="probe4" HorizontalAlignment="Left" Margin="26,243,0,0" Text="" VerticalAlignment="Top" Height="30" Width="330" />
 
     </Grid>
 </Page>

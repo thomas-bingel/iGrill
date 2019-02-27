@@ -10,7 +10,7 @@
     <PackageArchitecture>x64</PackageArchitecture>
     <PackageIdentityName>ed48beb3-e6fb-4400-9c7e-f5e0b8afd793</PackageIdentityName>
     <PackageIdentityPublisher>CN=tbing</PackageIdentityPublisher>
-    <IntermediateOutputPath>C:\dotnet\iGrill\IGrill.Playground\IGrill.Playground\obj\x64\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\dotnet\iGrill\IGrill.Playground\obj\x64\Debug\</IntermediateOutputPath>
     <RemoteDeploymentType>
     </RemoteDeploymentType>
     <PackageRegistrationPath>
@@ -18,8 +18,8 @@
     <RemoveNonLayoutFiles>true</RemoveNonLayoutFiles>
     <DeployOptionalPackages>false</DeployOptionalPackages>
     <WindowsSdkPath>C:\Program Files %28x86%29\Windows Kits\10\</WindowsSdkPath>
-    <LayoutDir>C:\dotnet\iGrill\IGrill.Playground\IGrill.Playground\bin\x64\Debug\AppX</LayoutDir>
-    <RegisteredManifestChecksum>5F4645222053CEF72AFAE0A015C462725DFEA4E478F2493271FFEA999265B240</RegisteredManifestChecksum>
+    <LayoutDir>C:\dotnet\iGrill\IGrill.Playground\bin\x64\Debug\AppX</LayoutDir>
+    <RegisteredManifestChecksum>23FDA3CE2B3CD6A21703E4AE643DE987DFF9592E3FD7AF215E5594D54053404F</RegisteredManifestChecksum>
     <RegisteredPackageMoniker>ed48beb3-e6fb-4400-9c7e-f5e0b8afd793_1.0.0.0_x64__k613v7feh4sag</RegisteredPackageMoniker>
     <RegisteredUserModeAppID>ed48beb3-e6fb-4400-9c7e-f5e0b8afd793_k613v7feh4sag!App</RegisteredUserModeAppID>
     <RegisteredPackageID>ed48beb3-e6fb-4400-9c7e-f5e0b8afd793</RegisteredPackageID>
@@ -27,16 +27,16 @@
     <RegisteredVersion>1.0.0.0</RegisteredVersion>
   </PropertyGroup>
   <ItemGroup>
-    <AppXManifest Include="C:\dotnet\iGrill\IGrill.Playground\IGrill.Playground\bin\x64\Debug\Core\AppxManifest.xml">
+    <AppXManifest Include="C:\dotnet\iGrill\IGrill.Playground\bin\x64\Debug\Core\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2019-01-08T11:28:15.183</Modified>
+      <Modified>2019-02-26T15:39:21.302</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
-    <AppxPackagedFile Include="C:\dotnet\iGrill\IGrill.Playground\IGrill.Playground\bin\x64\Debug\IGrill.Playground.exe">
+    <AppxPackagedFile Include="C:\dotnet\iGrill\IGrill.Playground\bin\x64\Debug\IGrill.Playground.exe">
       <PackagePath>entrypoint\IGrill.Playground.exe</PackagePath>
-      <Modified>2019-01-08T11:28:13.724</Modified>
+      <Modified>2019-02-26T15:39:19.301</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\tbing\.nuget\packages\mqttnet\2.8.5\lib\uap10.0\MQTTnet.dll">
       <PackagePath>MQTTnet.dll</PackagePath>
@@ -698,71 +698,71 @@
       <PackagePath>netstandard.dll</PackagePath>
       <Modified>2018-10-04T11:41:34.000</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\dotnet\iGrill\IGrill.Playground\IGrillLibrary\bin\x64\Debug\IGrillLibrary.dll">
+    <AppxPackagedFile Include="C:\dotnet\iGrill\IGrillLibrary\bin\x64\Debug\IGrillLibrary.dll">
       <PackagePath>IGrillLibrary.dll</PackagePath>
-      <Modified>2019-01-08T11:28:07.371</Modified>
+      <Modified>2019-02-26T08:59:46.087</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\dotnet\iGrill\IGrill.Playground\IGrill.Playground\Properties\Default.rd.xml">
+    <AppxPackagedFile Include="C:\dotnet\iGrill\IGrill.Playground\Properties\Default.rd.xml">
       <PackagePath>Properties\Default.rd.xml</PackagePath>
       <Modified>2019-01-01T15:49:43.736</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\dotnet\iGrill\IGrill.Playground\IGrill.Playground\Assets\LockScreenLogo.scale-200.png">
+    <AppxPackagedFile Include="C:\dotnet\iGrill\IGrill.Playground\Assets\LockScreenLogo.scale-200.png">
       <PackagePath>Assets\LockScreenLogo.scale-200.png</PackagePath>
       <Modified>2018-07-08T08:59:41.798</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\dotnet\iGrill\IGrill.Playground\IGrill.Playground\Assets\SplashScreen.scale-200.png">
+    <AppxPackagedFile Include="C:\dotnet\iGrill\IGrill.Playground\Assets\SplashScreen.scale-200.png">
       <PackagePath>Assets\SplashScreen.scale-200.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
       <Modified>2018-07-08T08:59:41.798</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\dotnet\iGrill\IGrill.Playground\IGrill.Playground\Assets\Square150x150Logo.scale-200.png">
+    <AppxPackagedFile Include="C:\dotnet\iGrill\IGrill.Playground\Assets\Square150x150Logo.scale-200.png">
       <PackagePath>Assets\Square150x150Logo.scale-200.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
       <Modified>2018-07-08T08:59:41.798</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\dotnet\iGrill\IGrill.Playground\IGrill.Playground\Assets\Square44x44Logo.scale-200.png">
+    <AppxPackagedFile Include="C:\dotnet\iGrill\IGrill.Playground\Assets\Square44x44Logo.scale-200.png">
       <PackagePath>Assets\Square44x44Logo.scale-200.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
       <Modified>2018-07-08T08:59:41.798</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\dotnet\iGrill\IGrill.Playground\IGrill.Playground\Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
+    <AppxPackagedFile Include="C:\dotnet\iGrill\IGrill.Playground\Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
       <PackagePath>Assets\Square44x44Logo.targetsize-24_altform-unplated.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
       <Modified>2018-07-08T08:59:41.798</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\dotnet\iGrill\IGrill.Playground\IGrill.Playground\Assets\StoreLogo.png">
+    <AppxPackagedFile Include="C:\dotnet\iGrill\IGrill.Playground\Assets\StoreLogo.png">
       <PackagePath>Assets\StoreLogo.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
       <Modified>2018-07-08T08:59:41.798</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\dotnet\iGrill\IGrill.Playground\IGrill.Playground\Assets\Wide310x150Logo.scale-200.png">
+    <AppxPackagedFile Include="C:\dotnet\iGrill\IGrill.Playground\Assets\Wide310x150Logo.scale-200.png">
       <PackagePath>Assets\Wide310x150Logo.scale-200.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
       <Modified>2018-07-08T08:59:41.798</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\dotnet\iGrill\IGrill.Playground\IGrill.Playground\bin\x64\Debug\IGrill.Playground.xr.xml">
+    <AppxPackagedFile Include="C:\dotnet\iGrill\IGrill.Playground\bin\x64\Debug\IGrill.Playground.xr.xml">
       <PackagePath>IGrill.Playground.xr.xml</PackagePath>
-      <Modified>2019-01-08T10:38:24.221</Modified>
+      <Modified>2019-02-26T15:39:19.003</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\dotnet\iGrill\IGrill.Playground\IGrill.Playground\bin\x64\Debug\App.xbf">
+    <AppxPackagedFile Include="C:\dotnet\iGrill\IGrill.Playground\bin\x64\Debug\App.xbf">
       <PackagePath>App.xbf</PackagePath>
-      <Modified>2019-01-08T11:28:13.465</Modified>
+      <Modified>2019-02-26T15:39:19.041</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\dotnet\iGrill\IGrill.Playground\IGrill.Playground\bin\x64\Debug\MainPage.xbf">
+    <AppxPackagedFile Include="C:\dotnet\iGrill\IGrill.Playground\bin\x64\Debug\MainPage.xbf">
       <PackagePath>MainPage.xbf</PackagePath>
-      <Modified>2019-01-08T11:28:13.467</Modified>
+      <Modified>2019-02-26T15:39:19.042</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Windows Kits\10\UnionMetadata\10.0.17134.0\Windows.winmd">
       <PackagePath>WinMetadata\Windows.winmd</PackagePath>
       <Modified>2018-04-19T21:01:52.000</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\dotnet\iGrill\IGrill.Playground\IGrill.Playground\bin\x64\Debug\resources.pri">
+    <AppxPackagedFile Include="C:\dotnet\iGrill\IGrill.Playground\bin\x64\Debug\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2019-01-08T11:28:14.608</Modified>
+      <Modified>2019-02-26T08:59:57.840</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\dotnet\iGrill\IGrill.Playground\IGrill.Playground\bin\x64\Debug\Core\IGrill.Playground.exe">
+    <AppxPackagedFile Include="C:\dotnet\iGrill\IGrill.Playground\bin\x64\Debug\Core\IGrill.Playground.exe">
       <PackagePath>IGrill.Playground.exe</PackagePath>
-      <Modified>2019-01-08T11:28:15.175</Modified>
+      <Modified>2019-02-26T15:39:21.292</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>

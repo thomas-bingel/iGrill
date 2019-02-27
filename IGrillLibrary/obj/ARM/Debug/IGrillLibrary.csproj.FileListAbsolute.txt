@@ -20,3 +20,6 @@ C:\dotnet\iGrill\IGrill.Playground\IGrillLibrary\obj\ARM\Debug\pri.resfiles.inte
 C:\dotnet\iGrill\IGrill.Playground\IGrillLibrary\obj\ARM\Debug\qualifiers.txt
 C:\dotnet\iGrill\IGrill.Playground\IGrillLibrary\obj\ARM\Debug\qualifiers.txt.intermediate
 C:\dotnet\iGrill\IGrill.Playground\IGrillLibrary\obj\ARM\Debug\MultipleQualifiersPerDimensionFound.txt
+C:\dotnet\iGrill\IGrillLibrary\obj\ARM\Debug\IGrillLibrary.csproj.CoreCompileInputs.cache
+C:\dotnet\iGrill\IGrillLibrary\obj\ARM\Debug\IGrillLibrary.dll
+C:\dotnet\iGrill\IGrillLibrary\obj\ARM\Debug\IGrillLibrary.pdb

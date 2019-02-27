@@ -297,3 +297,14 @@ C:\dotnet\iGrill\IGrill.Playground\IGrill.Playground\obj\ARM\Debug\resources.en-
 C:\dotnet\iGrill\IGrill.Playground\IGrill.Playground\obj\ARM\Debug\resources.en-us.resfiles.intermediate
 C:\dotnet\iGrill\IGrill.Playground\IGrill.Playground\obj\ARM\Debug\MQTTnet.pri.xml
 C:\dotnet\iGrill\IGrill.Playground\IGrill.Playground\obj\ARM\Debug\ProjectArchitectures.txt
+C:\dotnet\iGrill\IGrill.Playground\obj\ARM\Debug\IGrill.Playground.csprojAssemblyReference.cache
+C:\dotnet\iGrill\IGrill.Playground\obj\ARM\Debug\App.g.i.cs
+C:\dotnet\iGrill\IGrill.Playground\obj\ARM\Debug\App.g.cs
+C:\dotnet\iGrill\IGrill.Playground\obj\ARM\Debug\MainPage.g.i.cs
+C:\dotnet\iGrill\IGrill.Playground\obj\ARM\Debug\MainPage.g.cs
+C:\dotnet\iGrill\IGrill.Playground\obj\ARM\Debug\App.xaml
+C:\dotnet\iGrill\IGrill.Playground\obj\ARM\Debug\MainPage.xaml
+C:\dotnet\iGrill\IGrill.Playground\obj\ARM\Debug\App.xbf
+C:\dotnet\iGrill\IGrill.Playground\obj\ARM\Debug\MainPage.xbf
+C:\dotnet\iGrill\IGrill.Playground\obj\ARM\Debug\IGrill.Playground.exe
+C:\dotnet\iGrill\IGrill.Playground\obj\ARM\Debug\IGrill.Playground.pdb

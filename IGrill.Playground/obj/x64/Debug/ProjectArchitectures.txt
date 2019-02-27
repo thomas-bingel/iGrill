@@ -1,2 +1,2 @@
-C:\dotnet\iGrill\IGrill.Playground\IGrill.Playground\IGrill.Playground.csproj;x64
-C:\dotnet\iGrill\IGrill.Playground\IGrillLibrary\IGrillLibrary.csproj;x64
+C:\dotnet\iGrill\IGrill.Playground\IGrill.Playground.csproj;x64
+C:\dotnet\iGrill\IGrillLibrary\IGrillLibrary.csproj;x64
