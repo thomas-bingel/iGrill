@@ -1,8 +1,6 @@
 # iGrill
 C# library to connect to the iGrill using UWP (Universal Windows Platform)
 
-Work in Progress...
-
 This library can be used to connect to the iGrill Mini, v2 and v3. 
 Using a standard Windows or Windows IoT Core on a Raspberry Pi.
 
