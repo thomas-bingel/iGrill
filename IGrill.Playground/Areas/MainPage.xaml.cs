@@ -49,6 +49,13 @@ namespace IGrill.App.Areas
 
         public MainPage()
         {
+            var ncryption_key = new sbyte[] { -33, 51, -32, -119, -12, 72, 78, 115, -110, -44, -49, -71, 70, -25, -123, -74 };
+
+            foreach (var byt in ncryption_key)
+            {
+                Debug.Write(String.Format("0x{0:X}, ", byt));
+            }
+
             this.DataContext = new MainPageViewModel();
 
             devicePicker = new DevicePicker();
@@ -93,11 +100,11 @@ namespace IGrill.App.Areas
 
             igrill.OnTemperatureChanged += async (object sender, TemperatureChangedEventArg args) =>
             {
-                Debug.WriteLine(String.Format("{0}: Probe {1} = {2}°C", DateTime.Now, args.ProbeId, args.Temperature));
+                Debug.WriteLine(String.Format("{0}: Probe {1} = {2}°C", DateTime.Now, args.ProbeIndex, args.Temperature));
 
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                     ViewModel.Probes[args.ProbeId].Value = args.Temperature;
+                     ViewModel.Probes[args.ProbeIndex].Value = args.Temperature;
                 });
                
             };
@@ -133,7 +140,7 @@ namespace IGrill.App.Areas
             {
 
                 var message = new MqttApplicationMessageBuilder()
-                    .WithTopic("/igrill/probe" + args.ProbeId)
+                    .WithTopic("/igrill/probe" + args.ProbeIndex)
                     .WithPayload(args.Temperature.ToString())
                     .Build();
 

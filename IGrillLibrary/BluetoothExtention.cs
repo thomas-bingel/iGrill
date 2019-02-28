@@ -19,7 +19,7 @@ namespace IGrillLibrary
                 throw new Exception("Could not read from Characteristic UUID=" + gatt.Uuid);
             }
             var reader = DataReader.FromBuffer(result.Value);
-            reader.UnicodeEncoding = Windows.Storage.Streams.UnicodeEncoding.Utf8;
+            reader.UnicodeEncoding = UnicodeEncoding.Utf8;
             reader.ByteOrder = ByteOrder.LittleEndian;
             var data = new byte[reader.UnconsumedBufferLength];
             reader.ReadBytes(data);
@@ -50,7 +50,6 @@ namespace IGrillLibrary
         public static async Task WriteBytesAsync(this GattCharacteristic gatt, byte[] data)
         {
             var writeStatus = await gatt.WriteValueWithResultAsync(data.AsBuffer());
-
             if (writeStatus.Status != GattCommunicationStatus.Success)
             {
                 throw new Exception("Could not write data to Characteristic UUID=" + gatt.Uuid);

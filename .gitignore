@@ -3,7 +3,7 @@
 ################################################################################
 
 .vs
-/IGrillLibrary/bin
-/IGrillLibrary/obj
-/IGrill.Playground/bin
-/IGrill.Playground/obj
+/IGrill.Library/bin
+/IGrill.Library/obj
+/IGrill.App/bin
+/IGrill.App/obj

@@ -10,6 +10,7 @@ using System.Timers;
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Devices.Enumeration;
+using Windows.Devices.Radios;
 using Windows.Storage.Streams;
 
 
@@ -17,7 +18,6 @@ namespace IGrillLibrary
 {
     public class IGrill
     {
-
         private Random rnd = new Random();
 
         private readonly Guid TEMPERATURE_SERVICE_GUID = Guid.Parse("a5c50000-f186-4bd6-97f2-7ebacba0d708");
@@ -33,13 +33,17 @@ namespace IGrillLibrary
         private readonly Guid DEVICE_RESPONSE_GUID = Guid.Parse("64AC0004-4A4B-4B58-9F37-94D3C52FFDF7");
 
         private readonly Guid BATTERY_SERVICE_GUID = Guid.Parse("0000180f-0000-1000-8000-00805F9B34FB");
+        private readonly Guid BATTERY_CHARACTERISTIC_GUID = Guid.Parse("00002A19-0000-1000-8000-00805F9B34FB");
 
+        // iGrill Mini
+        private readonly byte[] iGrillMiniKey = new byte[] {
+            0xED, 0x5E, 0x30, 0x8E, 0x8B, 0xCC, 0x91, 0x13,
+            0x30, 0x6C, 0xD4, 0x68, 0x54, 0x15, 0x3E, 0xDD  };
+
+        // iGrill v2
         private readonly byte[] iGrill2Key = new byte[] {
-            0xdf, 0x33, 0xe0, 0x89, 0xf4, 0x48, 0x4e, 0x73,
-            0x92, 0xd4, 0xcf, 0xb9, 0x46, 0xe7, 0x85, 0xb6 };
-
-        // Mini:
-        // ncryption_key = [-19, 94, 48, -114, -117, -52, -111, 19, 48, 108, -44, 104, 84, 21, 62, -35]
+            0xDF, 0x33, 0xE0, 0x89, 0xF4, 0x48, 0x4E, 0x73,
+            0x92, 0xD4, 0xCF, 0xB9, 0x46, 0xE7, 0x85, 0xB6  };
 
         List<Guid> probes = new List<Guid>();
 
@@ -77,6 +81,7 @@ namespace IGrillLibrary
 
         public static IGrill FromDeviceId(string deviceId)
         {
+            // iGrill_mini
             //TODO: 
             return new IGrillLibrary.IGrill(IGrillVersion.IGrill2);
         }
@@ -159,7 +164,7 @@ namespace IGrillLibrary
             // read device challenge
             Debug.WriteLine("Read encrypted challenge from iGrill");
             byte[] encrypted_device_challenge = await deviceChallengeCharacteristig.ReadBytesAsync();
-            var device_challenge = Encryption.Decrypt(encrypted_device_challenge, iGrill2Key);
+            var device_challenge = Encryption.Decrypt(encrypted_device_challenge, GetEncryptionKey(iGrillVersion));
 
             // verify device challenge
             Debug.WriteLine("Comparing challenges...");
@@ -181,11 +186,18 @@ namespace IGrillLibrary
             Debug.WriteLine("Authentication with iGrill successful");
         }
 
-        private async Task<GattCharacteristic> FindCharacteristic(Guid serviceGuid, Guid characteristicGuid)
+        private byte[] GetEncryptionKey(IGrillVersion iGrillVersion)
         {
-            var services = await bluetoothLeDevice.GetGattServicesForUuidAsync(serviceGuid);
-            var characteristics = await services.Services.First().GetCharacteristicsForUuidAsync(characteristicGuid);
-            return characteristics.Characteristics.First();
+            switch (iGrillVersion)
+            {
+                case IGrillVersion.IGrillMini:
+                    return iGrillMiniKey;
+                case IGrillVersion.IGrill2:
+                case IGrillVersion.IGrill3:
+                    return iGrill2Key;
+                default:
+                    throw new Exception(String.Format("No key configured for iGrill Version {0}", iGrillVersion));
+            }
         }
 
         private static int ReadTemperature(GattValueChangedEventArgs args)
@@ -203,23 +215,32 @@ namespace IGrillLibrary
 
         private async Task RegisterForBatteryChanges()
         {
-
-            //var batteryService = await bluetoothLeDevice.GetGattServicesForUuidAsync(BATTERY_SERVICE_GUID);
-            //var batteryCharacteristic = FindCharacteristic(BATTERY_SERVICE_GUID, BATT;
-            //batteryCharacteristic.Characteristics.First().ValueChanged += (GattCharacteristic sender,
-            //    GattValueChangedEventArgs args) =>
-            //{
-            //    var reader = DataReader.FromBuffer(args.CharacteristicValue);
-            //    reader.UnicodeEncoding = Windows.Storage.Streams.UnicodeEncoding.Utf8;
-            //    reader.ByteOrder = ByteOrder.LittleEndian;
-            //    var byteArray = new byte[reader.UnconsumedBufferLength];
-            //    reader.ReadBytes(byteArray);
-            //    Debug.WriteLine("Battery Level: " + byteArray[0]);
-            //};
-
-
+            var services = await bluetoothLeDevice.GetGattServiceForUuidAsync(BATTERY_SERVICE_GUID);
+            var characteristics = await services.GetCharacteristics2Async();
+   
+            characteristics.First().ValueChanged += (GattCharacteristic sender, GattValueChangedEventArgs args) =>
+            {
+                var reader = DataReader.FromBuffer(args.CharacteristicValue);
+                reader.UnicodeEncoding = Windows.Storage.Streams.UnicodeEncoding.Utf8;
+                reader.ByteOrder = ByteOrder.LittleEndian;
+                var byteArray = new byte[reader.UnconsumedBufferLength];
+                reader.ReadBytes(byteArray);
+                Debug.WriteLine("Battery Level: " + byteArray[0]);
+            };
         }
 
 
+        public static async Task<bool> IsBluetoothEnabledAsync()
+        {
+            var radios = await Radio.GetRadiosAsync();
+            var bluetoothRadio = radios.FirstOrDefault(radio => radio.Kind == RadioKind.Bluetooth);
+            return bluetoothRadio != null && bluetoothRadio.State == RadioState.On;
+        }
+
+        public static async Task<bool> IsBluetoothSupportedAsync()
+        {
+            var radios = await Radio.GetRadiosAsync();
+            return radios.FirstOrDefault(radio => radio.Kind == RadioKind.Bluetooth) != null;
+        }
     }
 }
