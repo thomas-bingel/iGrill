@@ -19,6 +19,8 @@ var iGrill = new IGrillLibrary.IGrill(IGrillVersion.IGrill2);
 - [x] Tested with iGrill 2
 - [ ] Tested with iGrill 3
 - [ ] Detect which iGrill it is
+- [ ] Cleanup Namespaces
+
 
 ## The App
 
