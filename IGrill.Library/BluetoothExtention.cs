@@ -52,7 +52,9 @@ namespace IGrillLibrary
             var writeStatus = await gatt.WriteValueWithResultAsync(data.AsBuffer());
             if (writeStatus.Status != GattCommunicationStatus.Success)
             {
-                throw new Exception("Could not write data to Characteristic UUID=" + gatt.Uuid);
+                throw new Exception(
+                    String.Format("Could not write data to Characteristic. Status={0} UUID={1}", 
+                    writeStatus.Status, gatt.Uuid));
             }
         }
     }

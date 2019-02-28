@@ -49,13 +49,6 @@ namespace IGrill.App.Areas
 
         public MainPage()
         {
-            var ncryption_key = new sbyte[] { -33, 51, -32, -119, -12, 72, 78, 115, -110, -44, -49, -71, 70, -25, -123, -74 };
-
-            foreach (var byt in ncryption_key)
-            {
-                Debug.Write(String.Format("0x{0:X}, ", byt));
-            }
-
             this.DataContext = new MainPageViewModel();
 
             devicePicker = new DevicePicker();
@@ -67,7 +60,7 @@ namespace IGrill.App.Areas
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
                     await PairDeviceIfNecessary(device);
-                    await ConnectIGrill(device.Id);
+                    await ConnectIGrill(device);
                     Settings.SelectedDeviceId = device.Id;
                 });
 
@@ -75,25 +68,25 @@ namespace IGrill.App.Areas
             devicePicker.Filter.SupportedDeviceSelectors.Add(BluetoothLEDevice.GetDeviceSelectorFromPairingState(false));
             devicePicker.Filter.SupportedDeviceSelectors.Add(BluetoothLEDevice.GetDeviceSelectorFromPairingState(true));
 
-            if (Settings.SelectedDeviceId != null)
-            {
-                Task.Run( async () => {
-                    await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
-                    {
-                        await ConnectIGrill(Settings.SelectedDeviceId);
-                    });
-                });
-            }
+            //if (Settings.SelectedDeviceId != null)
+            //{
+            //    Task.Run( async () => {
+            //        await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            //        {
+            //            await ConnectIGrill();
+            //        });
+            //    });
+            //}
             this.InitializeComponent();
 
         }
 
-        private async Task ConnectIGrill(string deviceId)
+        private async Task ConnectIGrill(DeviceInformation device)
         {
             
-            igrill = IGrillLibrary.IGrill.FromDeviceId(deviceId); 
+            igrill = IGrillLibrary.IGrill.FromDeviceInformation(device);
 
-            for (int i = 0; i < igrill.ProbeCount; i++)
+            foreach (int i in Enumerable.Range(0, igrill.ProbeCount))
             {
                 ViewModel.Probes.Add(new ProbeViewModel(i));
             }
@@ -108,7 +101,7 @@ namespace IGrill.App.Areas
                 });
                
             };
-            await igrill.ConnectAsync(deviceId);
+            await igrill.ConnectAsync();
 
 
             return;

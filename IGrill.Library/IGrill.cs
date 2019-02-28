@@ -21,12 +21,14 @@ namespace IGrillLibrary
         private Random rnd = new Random();
 
         private readonly Guid TEMPERATURE_SERVICE_GUID = Guid.Parse("a5c50000-f186-4bd6-97f2-7ebacba0d708");
+// iGrill Mini        private readonly Guid TEMPERATURE_SERVICE_GUID = Guid.Parse("63c70000-4a82-4261-95ff-92cf32477861");
         private readonly Guid PROBE_1_TEMPERATURE_CHARACTERISITC_GUID = Guid.Parse("06ef0002-2e06-4b79-9e33-fce2c42805ec");
         private readonly Guid PROBE_2_TEMPERATURE_CHARACTERISITC_GUID = Guid.Parse("06ef0004-2e06-4b79-9e33-fce2c42805ec");
         private readonly Guid PROBE_3_TEMPERATURE_CHARACTERISITC_GUID = Guid.Parse("06ef0006-2e06-4b79-9e33-fce2c42805ec");
         private readonly Guid PROBE_4_TEMPERATURE_CHARACTERISITC_GUID = Guid.Parse("06ef0008-2e06-4b79-9e33-fce2c42805ec");
 
         private readonly Guid DEVICE_SERVICE_GUID = Guid.Parse("64AC0000-4A4B-4B58-9F37-94D3C52FFDF7");
+
         private readonly Guid FIRMWARE_CHARACTERISTIC_GUID = Guid.Parse("64AC0001-4A4B-4B58-9F37-94D3C52FFDF7");
         private readonly Guid APP_CHALLENGE_GUID = Guid.Parse("64AC0002-4A4B-4B58-9F37-94D3C52FFDF7");
         private readonly Guid DEVICE_CHALLENGE_GUID = Guid.Parse("64AC0003-4A4B-4B58-9F37-94D3C52FFDF7");
@@ -45,18 +47,41 @@ namespace IGrillLibrary
             0xDF, 0x33, 0xE0, 0x89, 0xF4, 0x48, 0x4E, 0x73,
             0x92, 0xD4, 0xCF, 0xB9, 0x46, 0xE7, 0x85, 0xB6  };
 
+        // iGrill v3
+        private readonly byte[] iGrill3Key = new byte[]
+        {
+            0x27, 0x62, 0xFC, 0x5E, 0xCA, 0x13, 0x45, 0xE5,
+            0x9D, 0x11, 0xDE, 0xB6, 0xF6, 0xF3, 0x8C, 0x1C
+        };
+        /*
+            encryption_key = [39, 98, -4, 94, -54, 19, 69, -27, -99, 17, -34, -74, -10, -13, -116, 28] - iGrill V3
+            encryption_key = [-33, 51, -32, -119, -12, 72, 78, 115, -110, -44, -49, -71, 70, -25, -123, -74] - iGrill V2 
+            encryption_key = [-19, 94, 48, -114, -117, -52, -111, 19, 48, 108, -44, 104, 84, 21, 62, -35] - iGrill Mini 
+         */
+
         List<Guid> probes = new List<Guid>();
 
         private BluetoothLEDevice bluetoothLeDevice;
         private readonly IGrillVersion iGrillVersion;
         private readonly Timer simulationTimer;
+        private String deviceId;
+
+        public IGrill(IGrillVersion iGrillVersion, string deviceId)
+            : this(iGrillVersion)
+        {
+            this.deviceId = deviceId;
+        }
 
         public IGrill(IGrillVersion iGrillVersion)
         {
             this.iGrillVersion = iGrillVersion;
             switch(iGrillVersion)
             {
+                case IGrillVersion.IGrillMini:
+                    probes.Add(PROBE_1_TEMPERATURE_CHARACTERISITC_GUID);
+                    break;
                 case IGrillVersion.IGrill2:
+                case IGrillVersion.IGrill3:
                     probes.Add(PROBE_1_TEMPERATURE_CHARACTERISITC_GUID);
                     probes.Add(PROBE_2_TEMPERATURE_CHARACTERISITC_GUID);
                     probes.Add(PROBE_3_TEMPERATURE_CHARACTERISITC_GUID);
@@ -70,27 +95,37 @@ namespace IGrillLibrary
                         OnTemperatureChanged?.Invoke(this, new TemperatureChangedEventArg(0, rnd.Next()));
                     };
                     simulationTimer.AutoReset = true;
-                    
-
                     break;
                 default:
                     throw new NotSupportedException("Not yet supported");
             }
-            
         }
 
-        public static IGrill FromDeviceId(string deviceId)
+        public static IGrill FromDeviceInformation(DeviceInformation device)
         {
-            // iGrill_mini
-            //TODO: 
-            return new IGrillLibrary.IGrill(IGrillVersion.IGrill2);
+            if (device.Name.StartsWith("iGrill_mini"))
+            {
+                return new IGrillLibrary.IGrill(IGrillVersion.IGrillMini, device.Id);
+            }
+            else if (device.Name.StartsWith("iGrill_V2"))
+            {
+                return new IGrillLibrary.IGrill(IGrillVersion.IGrill2, device.Id);
+            }
+            else if (device.Name.StartsWith("iGrill_V3"))
+            {
+                return new IGrillLibrary.IGrill(IGrillVersion.IGrill3, device.Id);
+            }
+            else
+            {
+                throw new Exception("Unknown device with name " + device.Name);
+            }
         }
 
         public int ProbeCount { get { return probes.Count; } }
 
         public event EventHandler<TemperatureChangedEventArg> OnTemperatureChanged;
 
-        public async Task ConnectAsync(String deviceId)
+        public async Task ConnectAsync()
         {
             if (this.iGrillVersion == IGrillVersion.Simulation)
             {
@@ -104,19 +139,20 @@ namespace IGrillLibrary
                 throw new Exception("iGrill not found");
             }
 
-            bluetoothLeDevice.ConnectionStatusChanged += async (BluetoothLEDevice device, object obj) =>
+            bluetoothLeDevice.ConnectionStatusChanged += (BluetoothLEDevice device, object obj) =>
             {
                 Debug.WriteLine("Connection status changed to: " + device.ConnectionStatus);
             };
 
             await Authenticate();
             await RegisterForTemperatureChanges();
-            await RegisterForBatteryChanges();
+            //await RegisterForBatteryChanges();
         }
 
 
         private async Task RegisterForTemperatureChanges()
         {
+
             var service = await bluetoothLeDevice.GetGattServiceForUuidAsync(TEMPERATURE_SERVICE_GUID);
             var accessStatus = await service.RequestAccessAsync();
             var openStatus = await service.OpenAsync(GattSharingMode.Exclusive);
@@ -148,15 +184,12 @@ namespace IGrillLibrary
             // Gett Service
             var service = await bluetoothLeDevice.GetGattServiceForUuidAsync(DEVICE_SERVICE_GUID);
 
-            var characteristicsResult = await service.GetCharacteristicsAsync();
-            var characteristics = characteristicsResult.Characteristics;
-
+            var characteristics = await service.GetCharacteristics2Async();
             var challengeCharacteristic = characteristics.First((c) => c.Uuid == APP_CHALLENGE_GUID);
-            var responseCharacterisitc = characteristics.First((c) => c.Uuid == DEVICE_RESPONSE_GUID);
             var deviceChallengeCharacteristig = characteristics.First((c) => c.Uuid == DEVICE_CHALLENGE_GUID);
+            var responseCharacterisitc = characteristics.First((c) => c.Uuid == DEVICE_RESPONSE_GUID);
 
-            // send app challenge
-            Debug.WriteLine("Send chalange to iGrill");
+            Debug.WriteLine("Send challenge to iGrill");
             var challenge = new byte[16];
             Array.Copy(Enumerable.Range(0, 8).Select(n => (byte)rnd.Next(0, 255)).ToArray(), challenge, 8);
             await challengeCharacteristic.WriteBytesAsync(challenge);
@@ -168,11 +201,10 @@ namespace IGrillLibrary
 
             // verify device challenge
             Debug.WriteLine("Comparing challenges...");
-            for (int i = 0; i < 8; i++)
-            {
+            Enumerable.Range(0, 8).ToList().ForEach(i => {
                 if (challenge[i] != device_challenge[i])
                     throw new Exception("Invalid device challange");
-            }
+            });
 
             // send device response
             Debug.WriteLine("Send encrypted response to iGrill");
@@ -193,8 +225,9 @@ namespace IGrillLibrary
                 case IGrillVersion.IGrillMini:
                     return iGrillMiniKey;
                 case IGrillVersion.IGrill2:
-                case IGrillVersion.IGrill3:
                     return iGrill2Key;
+                case IGrillVersion.IGrill3:
+                    return iGrill3Key;
                 default:
                     throw new Exception(String.Format("No key configured for iGrill Version {0}", iGrillVersion));
             }
