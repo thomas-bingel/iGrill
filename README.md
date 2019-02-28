@@ -6,8 +6,6 @@ Work in Progress...
 This library can be used to connect to the iGrill Mini, v2 and v3. 
 Using a standard Windows or Windows IoT Core on a Raspberry Pi.
 
-![iGrill Image](https://product-images.weber.com/accessory-images/7204B1_REV.png)
-
 Usage of the library
 ``` C# 
 var iGrill = new IGrillLibrary.IGrill(IGrillVersion.IGrill2);
@@ -18,10 +16,15 @@ var iGrill = new IGrillLibrary.IGrill(IGrillVersion.IGrill2);
     await igrill.ConnectAsync("[DEVICE_ID]");
 ```
 
+## Tasks
+- [ ] Tested with iGrill Mini
+- [x] Tested with iGrill 2
+- [ ] Tested with iGrill 3
+- [ ] Detect which iGrill it is
+
 ## The App
 
 Work in Progress...
-
 
 ## Tasks
 - [x] Using Configuration to persist selected device
@@ -29,6 +32,8 @@ Work in Progress...
 - [ ] Configuration (Settings)
 - [ ] Multilanguage
 - [ ] Add Azure Pipeline
+
+
 
 Starting App in CommandLine (Checkout, Build, Run)
 
