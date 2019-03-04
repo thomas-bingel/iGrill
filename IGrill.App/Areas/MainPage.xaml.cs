@@ -34,22 +34,21 @@ namespace IGrill.App.Areas
     public sealed partial class MainPage : Page
     {
 
-        public async void ConnectButton_Click(object sender, RoutedEventArgs e)
-        {
-            devicePicker.Show(new Rect(0, 0, 200, 500), Windows.UI.Popups.Placement.Below);
-        }
 
         public MainPageViewModel ViewModel
         {
             get { return (MainPageViewModel)this.DataContext; }
         }
 
-        IGrillLibrary.IGrill igrill;
+        private readonly MqttService mqttService;
+        private IGrillLibrary.IGrill igrill;
         private DevicePicker devicePicker = null;
 
         public MainPage()
         {
             this.DataContext = new MainPageViewModel();
+            mqttService = new MqttService();
+
 
             devicePicker = new DevicePicker();
             this.devicePicker.DeviceSelected += async (devicePicker, args) =>
@@ -59,6 +58,9 @@ namespace IGrill.App.Areas
 
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
+                    //await mqttService.StartAsync();
+
+
                     await PairDeviceIfNecessary(device);
                     await ConnectIGrill(device);
                     Settings.SelectedDeviceId = device.Id;
@@ -68,15 +70,6 @@ namespace IGrill.App.Areas
             devicePicker.Filter.SupportedDeviceSelectors.Add(BluetoothLEDevice.GetDeviceSelectorFromPairingState(false));
             devicePicker.Filter.SupportedDeviceSelectors.Add(BluetoothLEDevice.GetDeviceSelectorFromPairingState(true));
 
-            //if (Settings.SelectedDeviceId != null)
-            //{
-            //    Task.Run( async () => {
-            //        await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
-            //        {
-            //            await ConnectIGrill();
-            //        });
-            //    });
-            //}
             this.InitializeComponent();
 
         }
@@ -84,85 +77,50 @@ namespace IGrill.App.Areas
         private async Task ConnectIGrill(DeviceInformation device)
         {
             
-            igrill = IGrillLibrary.IGrill.FromDeviceInformation(device);
+            igrill = IGrillLibrary.IGrillFactory.FromDeviceInformation(device);
 
             foreach (int i in Enumerable.Range(0, igrill.ProbeCount))
             {
                 ViewModel.Probes.Add(new ProbeViewModel(i));
             }
 
-            igrill.OnTemperatureChanged += async (object sender, TemperatureChangedEventArg args) =>
+            igrill.TemperatureChanged += async (sender, args) =>
             {
                 Debug.WriteLine(String.Format("{0}: Probe {1} = {2}°C", DateTime.Now, args.ProbeIndex, args.Temperature));
 
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                     ViewModel.Probes[args.ProbeIndex].Value = args.Temperature;
+                    ViewModel.Probes[args.ProbeIndex].Value = args.Temperature;
                 });
-               
             };
+            igrill.BatteryLevelChanges += async (sender, batteryLevel) =>
+            {
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    ViewModel.BatteryLevel = batteryLevel;
+                });
+            };
+
+            // MQTT
+            igrill.TemperatureChanged += async (object sender, TemperatureChangedEventArg args) =>
+            {
+                await mqttService.SendProbeTemperatureAsync(args.ProbeIndex, args.Temperature);
+            };
+            igrill.BatteryLevelChanges += async (sender, batteryLevel) =>
+            {
+                await mqttService.SendBatteryLevelAsync(batteryLevel);
+            };
+
             await igrill.ConnectAsync();
-
-
-            return;
-            // Create a new MQTT client.
-            var factory = new MqttFactory();
-            var client = factory.CreateMqttClient();
-            // Create TCP based options using the builder.
-            var options = new MqttClientOptionsBuilder()
-                .WithClientId("iGrill")
-                .WithTcpServer("192.168.0.63", 1883)
-                .WithCleanSession()
-                .Build();
-            client.Disconnected += async (s, e) =>
-            {
-                await Task.Delay(TimeSpan.FromSeconds(5));
-
-                try
-                {
-                    var result = await client.ConnectAsync(options);
-                }
-                catch (MQTTnet.Exceptions.MqttCommunicationException ex)
-                {
-                    Console.WriteLine("Mqtt reconnect failed: " + ex.Message);
-                }
-            };
-
-
-            igrill.OnTemperatureChanged += async (object sender, TemperatureChangedEventArg args) =>
-            {
-
-                var message = new MqttApplicationMessageBuilder()
-                    .WithTopic("/igrill/probe" + args.ProbeIndex)
-                    .WithPayload(args.Temperature.ToString())
-                    .Build();
-
-                try
-                {
-                    await client.PublishAsync(message);
-                } catch
-                {
-
-                }
-            };
-
-            try
-            {
-                var result = await client.ConnectAsync(options);
-            }
-            catch (MQTTnet.Exceptions.MqttCommunicationException ex)
-            {
-                Console.WriteLine("### CONNECTING FAILED ###" + ex.Message);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("### CONNECTING FAILED ###" + ex.Message);
-            }
-
+            ViewModel.Name = igrill.DeviceName;
+            ViewModel.FirmwareVersion = igrill.FirmwareVersion;
 
         }
 
-      
+        public void ConnectButton_Click(object sender, RoutedEventArgs e)
+        {
+            devicePicker.Show(new Rect(0, 0, 200, 500), Windows.UI.Popups.Placement.Below);
+        }
 
         private static async Task PairDeviceIfNecessary(DeviceInformation device)
         {
@@ -187,7 +145,7 @@ namespace IGrill.App.Areas
                         return;
                     } else
                     {
-                        throw new Exception(String.Format("Could not pair devive. Pairing status: {0}", result.Status));
+                        throw new Exception(String.Format("Could not pair device. Pairing status: {0}", result.Status));
                     }
                 }
                 throw new Exception("Pairing ot supported by device.");
@@ -195,10 +153,15 @@ namespace IGrill.App.Areas
             }
         }
 
-        private void CustomPairing_PairingRequested(DeviceInformationCustomPairing sender, DevicePairingRequestedEventArgs args)
-        {
-            args.Accept("123456");
-        }
 
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+
+            //for (int i=0; i<4; i++)
+            //{
+            //    mqttService.SendProbeTemperatureAsync(i, null);
+            //}
+            //mqttService.SendBatteryLevelAsync(null);
+        }
     }
 }

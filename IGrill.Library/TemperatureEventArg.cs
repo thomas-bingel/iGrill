@@ -10,9 +10,9 @@
         /// <summary>
         /// The temperature of the probe
         /// </summary>
-        public int Temperature { get; set; }
+        public int? Temperature { get; set; }
 
-        public TemperatureChangedEventArg(int probeIndex, int temperature)
+        public TemperatureChangedEventArg(int probeIndex, int? temperature)
         {
             this.ProbeIndex = probeIndex;
             this.Temperature = temperature;

@@ -9,9 +9,54 @@ using Windows.ApplicationModel.Resources;
 
 namespace IGrill.App.Areas
 {
-    public class MainPageViewModel
+    public class MainPageViewModel : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public ProbeList Probes { get; set; } = new ProbeList();
+
+        private string name;
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+            set
+            {
+                this.name = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Name"));
+            }
+        }
+
+        private string firmwareVersion;
+        public string FirmwareVersion
+        {
+            get
+            {
+                return firmwareVersion;
+            }
+            set
+            {
+                this.firmwareVersion = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("FirmwareVersion"));
+            }
+        }
+
+        private int batteryLevel;
+        public int BatteryLevel
+        {
+            get
+            {
+                return batteryLevel;
+            }
+            set
+            {
+                this.batteryLevel = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("BatteryLevel"));
+            }
+        }
+
     }
 
     public class ProbeList : ObservableCollection<ProbeViewModel>
@@ -61,5 +106,8 @@ namespace IGrill.App.Areas
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Name"));
             }
         }
+
+
+
     }
 }

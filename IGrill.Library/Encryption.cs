@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace IGrillLibrary
 {
-    internal class Encryption
+    public  class Encryption
     {
         public static byte[] Decrypt(byte[] bytes, byte[] key)
         {
@@ -16,6 +16,7 @@ namespace IGrillLibrary
             AesManaged algorithm = new AesManaged();
             algorithm.IV = iv;
             algorithm.Key = key;
+            algorithm.Mode = CipherMode.ECB;
             algorithm.Padding = PaddingMode.None;
 
             byte[] ret = null;

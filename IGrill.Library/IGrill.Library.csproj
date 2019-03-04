@@ -120,12 +120,18 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AuthenticationService.cs" />
+    <Compile Include="BatteryService.cs" />
     <Compile Include="BluetoothExtention.cs" />
     <Compile Include="Encryption.cs" />
+    <Compile Include="GenericService.cs" />
     <Compile Include="IGrill.cs" />
+    <Compile Include="IGrillFactory.cs" />
+    <Compile Include="IGrillGuids.cs" />
     <Compile Include="IGrillVersion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TemperatureEventArg.cs" />
+    <Compile Include="TemperatureService.cs" />
     <EmbeddedResource Include="Properties\IGrillLibrary.rd.xml" />
   </ItemGroup>
   <ItemGroup>

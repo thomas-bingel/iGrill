@@ -107,6 +107,7 @@
     <Compile Include="Areas\MainPageViewModel.cs" />
     <Compile Include="Areas\TemperatureConverter.cs" />
     <Compile Include="Areas\TextIndexer.cs" />
+    <Compile Include="MqttService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
   </ItemGroup>

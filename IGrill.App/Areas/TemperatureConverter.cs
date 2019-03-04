@@ -15,7 +15,7 @@ namespace IGrill.App.Areas
         {
             if (value == null)
             {
-                return "";
+                return "Not connected";
             }
 
             int temperatureInCelcius = (int)value;

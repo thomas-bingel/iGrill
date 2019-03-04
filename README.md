@@ -15,10 +15,10 @@ var iGrill = new IGrillLibrary.IGrill(IGrillVersion.IGrill2);
 ```
 
 ## Tasks
-- [ ] Tested with iGrill Mini
+- [x] Tested with iGrill Mini
 - [x] Tested with iGrill 2
 - [ ] Tested with iGrill 3
-- [ ] Detect which iGrill it is
+- [x] Detect which iGrill it is
 - [ ] Cleanup Namespaces
 
 

@@ -5,7 +5,7 @@
     xmlns:local="using:IGrill.App.Areas"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d" Width="936" Height="580">
 
     <Page.Resources>
         <local:TemperatureConverter x:Key="TemperaturConverterKey"></local:TemperatureConverter>
@@ -22,9 +22,14 @@
                 </MenuFlyout>
             </Button.ContextFlyout>
         </Button>
-        <TextBlock FontSize="30" Text="iGrill" Margin="0,0,104,912" HorizontalAlignment="Stretch"/>
+        <TextBlock FontSize="30" Text="Device name:" Margin="10,35,0,0" HorizontalAlignment="Left" Width="274" Height="40" VerticalAlignment="Top" FontFamily="Segoe UI" />
+        <TextBlock FontSize="30" Text="{Binding Path=Name}" Margin="292,35,0,0" HorizontalAlignment="Left" Width="274" Height="40" VerticalAlignment="Top" FontFamily="Segoe UI" />
+        <TextBlock FontSize="30" Text="Firmware version:" Margin="10,75,0,0" HorizontalAlignment="Left" Width="274" Height="40" VerticalAlignment="Top" FontFamily="Segoe UI" />
+        <TextBlock FontSize="30" Text="{Binding Path=FirmwareVersion}" Margin="292,75,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="328" Height="40" />
+        <TextBlock FontSize="30" Text="Battery level:" Margin="10,115,0,0" HorizontalAlignment="Left" Width="274" Height="40" VerticalAlignment="Top" FontFamily="Segoe UI" />
+        <TextBlock FontSize="30" Text="{Binding Path=BatteryLevel}" Margin="292,115,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="352" Height="44" />
 
-        <ItemsControl ItemsSource = "{Binding Path=Probes}" Margin="0,100,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <ItemsControl ItemsSource = "{Binding Path=Probes}" Margin="0,173,0,0" HorizontalAlignment="Center" Width="916">
             <FlyoutBase.AttachedFlyout>
                 <MenuFlyout/>
             </FlyoutBase.AttachedFlyout>
@@ -38,14 +43,15 @@
                     <StackPanel Orientation = "Horizontal">
 
                         <TextBlock Text="{Binding Path=Name}"
+                                   FontSize="30" 
                                    HorizontalAlignment="Left"
                                    Margin="3 5 3 5" 
                                    VerticalAlignment="Top"  />
                         <TextBlock Text="{Binding Path=Value, Converter={StaticResource TemperaturConverterKey}}"
+                                   FontSize="30" 
                                    HorizontalAlignment="Left"
                                    Margin="0 5 3 5"
-                                   VerticalAlignment="Top" 
-                                   Width="100" />
+                                   VerticalAlignment="Top"  />
 
                     </StackPanel>
                 </DataTemplate>

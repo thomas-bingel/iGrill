@@ -3,22 +3,51 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Foundation.Collections;
 using Windows.Storage;
 
 namespace IGrill.Playground
 {
     static class Settings
     {
+        private static IPropertySet Values
+        {
+            get { return ApplicationData.Current.LocalSettings.Values; }
+        }
+
+        public static string MqttHost
+        {
+            get
+            {
+                return !(Values["MqttHost"] is string value) ? "192.168.0.69" : value;
+            }
+            set
+            {
+                Values["MqttHost"] = value;
+            }
+        }
+
+        public static int MqttPort
+        {
+            get
+            {
+                return !(Values["MqttPort"] is int value) ? 1883 : value;
+            }
+            set
+            {
+                Values["MqttPort"] = value;
+            }
+        }
 
         public static bool TemperatureInFahranheit {
             get
             {
-                var value = ApplicationData.Current.LocalSettings.Values["TemperatureInFahrenheit"] as bool?;
+                var value = Values["TemperatureInFahrenheit"] as bool?;
                 return value == null ? false : (bool)value;
             }
             set
             {
-                ApplicationData.Current.LocalSettings.Values["TemperatureInFahrenheit"] = value;
+                Values["TemperatureInFahrenheit"] = value;
             }
         }
 
@@ -26,12 +55,12 @@ namespace IGrill.Playground
         {
             get
             {
-                var value = ApplicationData.Current.LocalSettings.Values["StartInFullscreen"] as bool?;
+                var value = Values["StartInFullscreen"] as bool?;
                 return value == null ? false : (bool)value;
             }
             set
             {
-                ApplicationData.Current.LocalSettings.Values["StartInFullscreen"] = value;
+                Values["StartInFullscreen"] = value;
             }
         }
 
@@ -39,13 +68,14 @@ namespace IGrill.Playground
         {
             get
             {
-                return ApplicationData.Current.LocalSettings.Values["SelectedDeviceId"] as string;
+                return Values["SelectedDeviceId"] as string;
             }
             set
             {
-                ApplicationData.Current.LocalSettings.Values["SelectedDeviceId"] = value;
+                Values["SelectedDeviceId"] = value;
             }
         }
 
+    
     }
 }
