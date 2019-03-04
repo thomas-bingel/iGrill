@@ -19,16 +19,12 @@ await igrill.ConnectAsync();
 - [x] Tested with iGrill 2
 - [ ] Tested with iGrill 3
 - [x] Detect which iGrill it is
-- [x] Cleanup Namespaces
-- [x] Connection Status Callback
-- [x] Create IGrill Instance from ID and iGrillVersion
-
 
 ## The App
 
 Work in Progress...
 
-## Tasks
+### Tasks
 - [x] Using Configuration to persist selected device
 - [ ] Using MQTT
 - [ ] Configuration (Settings)
