@@ -4,6 +4,8 @@ C# library to connect to the iGrill using UWP (Universal Windows Platform)
 This library can be used to connect to the iGrill Mini, v2 and v3. 
 Using a standard Windows or Windows IoT Core on a Raspberry Pi.
 
+[![Build Status](https://dev.azure.com/tbingel/iGrill/_apis/build/status/thomas-bingel.iGrill?branchName=master)](https://dev.azure.com/tbingel/iGrill/_build/latest?definitionId=1&branchName=master)
+
 Usage of the library
 ``` C# 
 igrill = IGrill.Core.IGrillFactory.FromDeviceInformation(device);
@@ -29,6 +31,6 @@ Work in Progress...
 - [ ] Using MQTT
 - [ ] Configuration (Settings)
 - [ ] Multilanguage
-- [ ] Add Azure Pipeline
+- [x] Add Azure Pipeline
 - [ ] Starting App in CommandLine (Checkout, Build, Run)
 
