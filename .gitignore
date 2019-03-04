@@ -3,6 +3,7 @@
 ################################################################################
 
 .vs
+/IGrill.Core/*.nupkg
 /IGrill.Core/bin
 /IGrill.Core/obj
 /IGrill.App/bin

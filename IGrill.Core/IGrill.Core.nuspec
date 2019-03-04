@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>IGrill.Core</id>
-    <version>0.1.0</version>
+    <version>0.3.0</version>
     <title>C# library to connect to the iGrill using UWP (Universal Windows Platform)</title>
     <authors>Thomas Bingel</authors>
     <owners>Thomas Bingel</owners>
@@ -15,14 +15,18 @@
 
   <!-- DLLs and resources -->
   <files>
-    <file src="bin\ARM\Debug\IGrill.Core.dll" target="runtimes\win10-arm\native"/>
-    <file src="bin\ARM\Debug\IGrill.Core.pri" target="runtimes\win10-arm\native"/>
+    <file src="bin\ARM\Debug\IGrill.Core.dll" target="runtimes\win10-arm\lib\uap10.0"/>
+    <file src="bin\ARM\Debug\IGrill.Core.pdb" target="runtimes\win10-arm\lib\uap10.0"/>
 
-    <file src="bin\x64\Debug\IGrill.Core.dll" target="runtimes\win10-x64\native"/>
-    <file src="bin\x64\Debug\IGrill.Core.pri" target="runtimes\win10-x64\native"/>
+    <file src="bin\x64\Debug\IGrill.Core.dll" target="runtimes\win10-x64\lib\uap10.0"/>
+    <file src="bin\x64\Debug\IGrill.Core.pdb" target="runtimes\win10-x64\lib\uap10.0"/>
 
-    <file src="bin\x86\Debug\IGrill.Core.dll" target="runtimes\win10-x86\native"/>
-    <file src="bin\x86\Debug\IGrill.Core.pri" target="runtimes\win10-x86\native"/>
+    <file src="bin\x86\Debug\IGrill.Core.dll" target="runtimes\win10-x86\lib\uap10.0"/>
+    <file src="bin\x86\Debug\IGrill.Core.pdb" target="runtimes\win10-x86\lib\uap10.0"/>
+
+    <file src="bin\Release\IGrill.Core.dll" target="ref\uap10.0"/>
+    <file src="bin\Release\IGrill.Core.pdb" target="ref\uap10.0"/>
+
   </files>
 
 </package>

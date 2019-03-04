@@ -21,6 +21,7 @@ await igrill.ConnectAsync();
 - [x] Tested with iGrill 2
 - [ ] Tested with iGrill 3
 - [x] Detect which iGrill it is
+- [ ] Docu (Add Bluetooth right)
 
 ## The App
 
