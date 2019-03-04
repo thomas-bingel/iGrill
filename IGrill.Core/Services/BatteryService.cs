@@ -8,23 +8,16 @@ using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Storage.Streams;
 
-namespace IGrillLibrary
+namespace IGrill.Core
 {
     class BatteryService
     {
         private readonly Guid BATTERY_SERVICE_GUID = Guid.Parse("0000180f-0000-1000-8000-00805F9B34FB");
         private readonly Guid BATTERY_CHARACTERISTIC = Guid.Parse("00002a19-0000-1000-8000-00805f9b34fb");
 
-        private readonly BluetoothLEDevice bluetoothLeDevice;
-
         public event EventHandler<int> BatteryLevelChanged; 
 
-        public BatteryService(BluetoothLEDevice bluetoothLeDevice)
-        {
-            this.bluetoothLeDevice = bluetoothLeDevice;
-        }
-
-        public async Task RegisterForBatteryChanges()
+        public async Task RegisterForBatteryChanges(BluetoothLEDevice bluetoothLeDevice)
         {
             var services = await bluetoothLeDevice.GetGattServiceForUuidAsync(BATTERY_SERVICE_GUID);
             var characteristics = await services.GetCharacteristicForUuid2Async(BATTERY_CHARACTERISTIC);

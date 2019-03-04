@@ -1,52 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
-using System.Timers;
 using Windows.Devices.Bluetooth;
-using Windows.Devices.Bluetooth.GenericAttributeProfile;
-using Windows.Devices.Enumeration;
 using Windows.Devices.Radios;
-using Windows.Storage.Streams;
 
 
-namespace IGrillLibrary
+namespace IGrill.Core
 {
     public class IGrill
     {
-
-       
-        private readonly Guid DEVICE_NAME_CHARACTERISTIC_GUID = Guid.Parse("00001800-0000-1000-8000-00805f9b34fb");
-
-
         private BluetoothLEDevice bluetoothLeDevice;
         private readonly IGrillVersion iGrillVersion;
+        private readonly String deviceId;
 
-        private String deviceId;
         public String DeviceName { get; internal set; }
         public String FirmwareVersion { get; internal set; }
         public int BatteryLevel { get; internal set; }
-
         public int ProbeCount { get { return temperatureService.Probes.Count; } }
 
         private readonly GenericService genericService;
         private readonly AuthenticationService authenticationService;
         private readonly TemperatureService temperatureService;
+        private readonly BatteryService batteryService;
 
         public event EventHandler<TemperatureChangedEventArg> TemperatureChanged;
         public event EventHandler<int> BatteryLevelChanges;
-
-
+        public event EventHandler<BluetoothConnectionStatus> ConnectionStatusChanged;
 
         public IGrill(IGrillVersion iGrillVersion, string deviceId)
             : this(iGrillVersion)
         {
             this.deviceId = deviceId;
-           
         }
 
         public IGrill(IGrillVersion iGrillVersion)
@@ -55,15 +40,20 @@ namespace IGrillLibrary
             authenticationService = new AuthenticationService(iGrillVersion);
             temperatureService = new TemperatureService(iGrillVersion);
             genericService = new GenericService();
+            batteryService = new BatteryService();
         }
 
         public async Task ConnectAsync()
         {
-            //if (this.iGrillVersion == IGrillVersion.Simulation)
-            //{
-            //    simulationTimer.Enabled = true;
-            //    return;
-            //}
+            if (!await IsBluetoothEnabledAsync()) {
+                throw new Exception("Bluetooth is not enabled.");
+            }
+
+            if (!await IsBluetoothSupportedAsync())
+            {
+                throw new Exception("Bluetooth is not supportet.");
+            }
+
             bluetoothLeDevice = await BluetoothLEDevice.FromIdAsync(deviceId);
             
             if (bluetoothLeDevice == null)
@@ -71,23 +61,23 @@ namespace IGrillLibrary
                 throw new Exception("iGrill not found");
             }
 
+            // Event for connection status changed
             bluetoothLeDevice.ConnectionStatusChanged += (BluetoothLEDevice device, object obj) =>
             {
                 Debug.WriteLine("Connection status changed to: " + device.ConnectionStatus);
+                ConnectionStatusChanged?.Invoke(device, device.ConnectionStatus);
             };
-
-            var batteryService = new BatteryService(bluetoothLeDevice);
 
             // Read basic device information like name, etc.
             this.DeviceName = await genericService.GetDeviceNameAsync(bluetoothLeDevice);
-            this.FirmwareVersion = await GetFirmwareVersionAsync();
+            this.FirmwareVersion = await genericService.GetFirmwareVersionAsync(bluetoothLeDevice);
 
             // Read battery level and register for updates
             batteryService.BatteryLevelChanged += (sender, level) =>
             {
                 this.BatteryLevelChanges?.Invoke(sender, level);
             };
-            await batteryService.RegisterForBatteryChanges();
+            await batteryService.RegisterForBatteryChanges(bluetoothLeDevice);
 
             // Authenticate iGrill to read probes
             await authenticationService.Authenticate(bluetoothLeDevice);
@@ -98,15 +88,6 @@ namespace IGrillLibrary
                 this.TemperatureChanged?.Invoke(sender, args);
             };
             await temperatureService.RegisterForTemperatureChanges(bluetoothLeDevice);
-
-       
-        }
-
-        public async Task<string> GetFirmwareVersionAsync()
-        {
-            var service = await bluetoothLeDevice.GetGattServiceForUuidAsync(IGrillGuids.DEVICE_SERVICE_GUID);
-            var characteristics = await service.GetCharacteristicForUuid2Async(IGrillGuids.FIRMWARE_CHARACTERISTIC_GUID);
-            return await characteristics.ReadStringAsync();
         }
 
         public static async Task<bool> IsBluetoothEnabledAsync()

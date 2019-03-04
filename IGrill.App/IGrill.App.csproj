@@ -7,8 +7,8 @@
     <ProjectGuid>{69C74BED-77F5-4561-8F5A-F314EB332408}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>IGrill.Playground</RootNamespace>
-    <AssemblyName>IGrill.Playground</AssemblyName>
+    <RootNamespace>IGrill.App</RootNamespace>
+    <AssemblyName>IGrill.App</AssemblyName>
     <DefaultLanguage>de-DE</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17134.0</TargetPlatformVersion>
@@ -153,9 +153,9 @@
     <XliffResource Include="MultilingualResources\IGrill.Playground.en.xlf" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\IGrill.Library\IGrill.Library.csproj">
+    <ProjectReference Include="..\IGrill.Core\IGrill.Core.csproj">
       <Project>{786ee11e-64e9-4559-a715-39efe4d1c841}</Project>
-      <Name>IGrill.Library</Name>
+      <Name>IGrill.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

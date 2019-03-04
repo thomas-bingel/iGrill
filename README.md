@@ -6,12 +6,12 @@ Using a standard Windows or Windows IoT Core on a Raspberry Pi.
 
 Usage of the library
 ``` C# 
-var iGrill = new IGrillLibrary.IGrill(IGrillVersion.IGrill2);
-    igrill.OnTemperatureChanged += (object sender, TemperatureChangedEventArg args) =>
-    {
-        Debug.WriteLine(String.Format("Probe {0} = {1}°C", args.ProbeIndex, args.Temperature));
-    };
-    await igrill.ConnectAsync("[DEVICE_ID]");
+igrill = IGrill.Core.IGrillFactory.FromDeviceInformation(device);
+igrill.OnTemperatureChanged += (object sender, TemperatureChangedEventArg args) =>
+{
+    Debug.WriteLine(String.Format("Probe {0} = {1}°C", args.ProbeIndex, args.Temperature));
+};
+await igrill.ConnectAsync();
 ```
 
 ## Tasks
@@ -19,7 +19,9 @@ var iGrill = new IGrillLibrary.IGrill(IGrillVersion.IGrill2);
 - [x] Tested with iGrill 2
 - [ ] Tested with iGrill 3
 - [x] Detect which iGrill it is
-- [ ] Cleanup Namespaces
+- [x] Cleanup Namespaces
+- [x] Connection Status Callback
+- [x] Create IGrill Instance from ID and iGrillVersion
 
 
 ## The App
@@ -32,8 +34,5 @@ Work in Progress...
 - [ ] Configuration (Settings)
 - [ ] Multilanguage
 - [ ] Add Azure Pipeline
-
-
-
-Starting App in CommandLine (Checkout, Build, Run)
+- [ ] Starting App in CommandLine (Checkout, Build, Run)
 

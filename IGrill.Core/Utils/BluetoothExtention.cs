@@ -9,7 +9,7 @@ using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Storage.Streams;
 
-namespace IGrillLibrary
+namespace IGrill.Core
 {
     internal static class BluetoothExtention
     {

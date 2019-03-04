@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
 
-namespace IGrillLibrary
+namespace IGrill.Core
 {
     class AuthenticationService
     {
@@ -20,50 +19,27 @@ namespace IGrillLibrary
 
         private readonly IGrillVersion iGrillVersion;
 
-        // iGrill Mini
+        // iGrill Mini 
         private readonly byte[] iGrillMiniKey = new byte[] {
             0xED, 0x5E, 0x30, 0x8E, 0x8B, 0xCC, 0x91, 0x13,
             0x30, 0x6C, 0xD4, 0x68, 0x54, 0x15, 0x3E, 0xDD  };
 
-        // iGrill v2
+        // iGrill v2 & iGrill Mini 2
         private readonly byte[] iGrill2Key = new byte[] {
             0xDF, 0x33, 0xE0, 0x89, 0xF4, 0x48, 0x4E, 0x73,
             0x92, 0xD4, 0xCF, 0xB9, 0x46, 0xE7, 0x85, 0xB6  };
 
-        // iGrill v3
+        // iGrill v3 ?? correct?
         private readonly byte[] iGrill3Key = new byte[]
         {
             0x27, 0x62, 0xFC, 0x5E, 0xCA, 0x13, 0x45, 0xE5,
             0x9D, 0x11, 0xDE, 0xB6, 0xF6, 0xF3, 0x8C, 0x1C
         };
         /*
-            encryption_key = [39, 98, -4, 94, -54, 19, 69, -27, -99, 17, -34, -74, -10, -13, -116, 28] - iGrill V3
-            encryption_key = [-33, 51, -32, -119, -12, 72, 78, 115, -110, -44, -49, -71, 70, -25, -123, -74] - iGrill V2 
-                              -19, 94, 48, -114, -117, -52, -111, 19, 48, 108, -44, 104, 84, 21, 62, -35
-            encryption_key = [-19, 94, 48, -114, -117, -52, -111, 19, 48, 108, -44, 104, 84, 21, 62, -35] - iGrill Mini 
-         
-             
-            case 8: { // pulse 1000
-                return new byte[]{81, 16, 95, 92, 7, 107, 33, -14, 50, 31, -86, -28, 104, -21, -85, -25};
-            }
-            case 6: { // kt
-                return new byte[]{39, 98, -4, 94, -54, 19, 69, -27, -99, 17, -34, 74, -10, -13, -116, 28};
-            }
-            case 5: { // igrill_v3
-                return new byte[]{8, 105, 3, 62, -29, -80, 68, -16, -108, 127, 67, -114, -61, -97, 80, 88};
-            }
-            case 4: { // igrill_v2_2
-                return new byte[]{42, -31, -84, 99, -121, -73, 65, -83, -81, -111, 53, 75, -59, 6, -62, -70};
-            }
-            case 2: // igrill_mini_2
-            case 3: { // igrill_v2
-                return new byte[]{-33, 51, -32, -119, -12, 72, 78, 115, -110, -44, -49, -71, 70, -25, -123, -74};
-            }
-            case 1: 
-        }
-        // igrill_mini
-        return new byte[]{-19, 94, 48, -114, -117, -52, -111, 19, 48, 108, -44, 104, 84, 21, 62, -35};     
-             
+        return new byte[]{81, 16, 95, 92, 7, 107, 33, -14, 50, 31, -86, -28, 104, -21, -85, -25}; pulse 1000
+        return new byte[]{39, 98, -4, 94, -54, 19, 69, -27, -99, 17, -34, 74, -10, -13, -116, 28}; // kt ? iGrill v3
+        return new byte[]{8, 105, 3, 62, -29, -80, 68, -16, -108, 127, 67, -114, -61, -97, 80, 88};  // igrill_v3
+        return new byte[]{42, -31, -84, 99, -121, -73, 65, -83, -81, -111, 53, 75, -59, 6, -62, -70}; // igrill_v2_2
         */
 
 

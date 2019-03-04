@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IGrill.App", "IGrill.App\IGrill.App.csproj", "{69C74BED-77F5-4561-8F5A-F314EB332408}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IGrill.Library", "IGrill.Library\IGrill.Library.csproj", "{786EE11E-64E9-4559-A715-39EFE4D1C841}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IGrill.Core", "IGrill.Core\IGrill.Core.csproj", "{786EE11E-64E9-4559-A715-39EFE4D1C841}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{48CC85A8-10FE-4B0F-B316-A600E2396F70}"
 	ProjectSection(SolutionItems) = preProject

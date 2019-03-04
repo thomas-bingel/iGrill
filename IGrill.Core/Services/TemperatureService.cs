@@ -9,7 +9,7 @@ using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Storage.Streams;
 
-namespace IGrillLibrary
+namespace IGrill.Core
 {
     class TemperatureService
     {
@@ -20,10 +20,6 @@ namespace IGrillLibrary
         private readonly Guid PROBE_2_TEMPERATURE_CHARACTERISITC_GUID = Guid.Parse("06ef0004-2e06-4b79-9e33-fce2c42805ec");
         private readonly Guid PROBE_3_TEMPERATURE_CHARACTERISITC_GUID = Guid.Parse("06ef0006-2e06-4b79-9e33-fce2c42805ec");
         private readonly Guid PROBE_4_TEMPERATURE_CHARACTERISITC_GUID = Guid.Parse("06ef0008-2e06-4b79-9e33-fce2c42805ec");
-
-        private readonly Timer simulationTimer;
-
-        private Random rnd = new Random();
 
         public event EventHandler<TemperatureChangedEventArg> TemperatureChanged;
 
@@ -47,15 +43,6 @@ namespace IGrillLibrary
                     Probes.Add(PROBE_3_TEMPERATURE_CHARACTERISITC_GUID);
                     Probes.Add(PROBE_4_TEMPERATURE_CHARACTERISITC_GUID);
                     serviceGuid = TEMPERATURE_SERVICE_GUID;
-                    break;
-                case IGrillVersion.Simulation:
-                    Probes.Add(PROBE_1_TEMPERATURE_CHARACTERISITC_GUID);
-                    simulationTimer = new System.Timers.Timer(1000);
-                    simulationTimer.Elapsed += (sender, arg) =>
-                    {
-                        TemperatureChanged?.Invoke(this, new TemperatureChangedEventArg(0, rnd.Next()));
-                    };
-                    simulationTimer.AutoReset = true;
                     break;
                 default:
                     throw new NotSupportedException("Not yet supported");

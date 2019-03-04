@@ -1,4 +1,4 @@
-﻿namespace IGrillLibrary
+﻿namespace IGrill.Core
 {
     public class TemperatureChangedEventArg
     {

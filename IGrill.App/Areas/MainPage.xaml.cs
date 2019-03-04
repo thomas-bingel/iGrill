@@ -1,5 +1,5 @@
 ﻿using IGrill.Playground;
-using IGrillLibrary;
+using IGrill.Core;
 using MQTTnet;
 using MQTTnet.Client;
 using System;
@@ -41,7 +41,7 @@ namespace IGrill.App.Areas
         }
 
         private readonly MqttService mqttService;
-        private IGrillLibrary.IGrill igrill;
+        private IGrill.Core.IGrill igrill;
         private DevicePicker devicePicker = null;
 
         public MainPage()
@@ -58,12 +58,19 @@ namespace IGrill.App.Areas
 
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
-                    //await mqttService.StartAsync();
+                    try
+                    {
+                        await mqttService.StartAsync();
 
 
-                    await PairDeviceIfNecessary(device);
-                    await ConnectIGrill(device);
-                    Settings.SelectedDeviceId = device.Id;
+                        await PairDeviceIfNecessary(device);
+
+                        await ConnectIGrill(device);
+                        Settings.SelectedDeviceId = device.Id;
+                    } catch (Exception ex)
+                    {
+
+                    }
                 });
 
             };
@@ -77,7 +84,7 @@ namespace IGrill.App.Areas
         private async Task ConnectIGrill(DeviceInformation device)
         {
             
-            igrill = IGrillLibrary.IGrillFactory.FromDeviceInformation(device);
+            igrill = IGrill.Core.IGrillFactory.FromDeviceInformation(device);
 
             foreach (int i in Enumerable.Range(0, igrill.ProbeCount))
             {
