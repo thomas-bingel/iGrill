@@ -2,12 +2,15 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>IGrill.Core</id>
-    <version>0.3.0</version>
+    <version>0.4.0</version>
     <title>C# library to connect to the iGrill using UWP (Universal Windows Platform)</title>
     <authors>Thomas Bingel</authors>
     <owners>Thomas Bingel</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>This library can be used to connect to the iGrill Mini, v2 and v3. Using a standard Windows or Windows IoT Core on a Raspberry Pi.</description>
+    <description>
+      This library can be used to connect to the iGrill Mini, v2 and v3. Using a standard Windows or Windows IoT Core on a Raspberry Pi.
+      Project hostet at GitHub: https://github.com/thomas-bingel/iGrill
+    </description>
     <releaseNotes>First release</releaseNotes>
     <license type="expression">MIT</license>
     <tags>Weber iGrill UWP RaspberryPi</tags>
