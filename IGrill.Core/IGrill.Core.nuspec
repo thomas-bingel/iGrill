@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>IGrill.Core</id>
-    <version>0.4.0</version>
+    <version>0.5.0</version>
     <title>C# library to connect to the iGrill using UWP (Universal Windows Platform)</title>
     <authors>Thomas Bingel</authors>
     <owners>Thomas Bingel</owners>
