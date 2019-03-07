@@ -18,6 +18,11 @@ igrill.OnTemperatureChanged += (object sender, TemperatureChangedEventArg args) 
 await igrill.ConnectAsync();
 ```
 
+Remember to enable bluetooth in the manifest of your app.
+
+##Caught a Bug?
+ - Please feel free to contact me or create a pull request.
+
 ## Tasks
 - [x] Tested with iGrill Mini
 - [x] Tested with iGrill 2
